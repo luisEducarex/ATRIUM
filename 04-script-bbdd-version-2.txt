@@ -1,0 +1,349 @@
+﻿create database atrium default character set utf8 collate utf8_spanish_ci;
+
+use atrium;
+
+create table circuito(
+idCircuito int primary key AUTO_INCREMENT,
+tamanioParrilla int not null default '24',
+localizacion varchar(40) not null,
+pais varchar(25) not null,
+curvasTotales int not null,
+longitud double (4,2) not null,
+aforoAficionados int not null,
+nombre varchar(50) not null
+)engine=innodb;
+
+create table categoria (
+idCategoria int primary key AUTO_INCREMENT,
+nombreCategoria varchar(50) not null
+)engine=innodb;
+
+create table escuderia (
+idEscuderia int primary key AUTO_INCREMENT,
+idCategoria int,
+nombreJefe varchar(50) not null,
+presupuesto double(9,2) not null,
+nombre varchar(150) not null,
+patrocinadorPrincipal varchar(50) not null,
+FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria) ON DELETE CASCADE ON UPDATE CASCADE
+)engine=innodb;
+
+create table carrera (
+idCarrera int primary key AUTO_INCREMENT,
+idCircuito int,
+precioEntrada double(5,2) not null,
+FOREIGN KEY (idCircuito) REFERENCES circuito(idCircuito) ON DELETE
+CASCADE ON UPDATE CASCADE
+)engine=innodb;
+
+create table piloto (
+nif varchar(9) primary key,
+idEscuderia int,
+nombre varchar(50) not null,
+fNacimiento date not null,
+nacionalidad varchar(50) not null,
+pilotoReserva boolean default false,
+FOREIGN KEY (idEscuderia) REFERENCES escuderia(idEscuderia) ON DELETE
+CASCADE ON UPDATE CASCADE
+)engine=innodb;
+
+create table acogen (
+idCircuito int,
+idCategoria int,
+primary key (idCircuito, idCategoria),
+FOREIGN KEY (idCircuito) REFERENCES circuito(idCircuito) ON DELETE
+CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria) ON DELETE CASCADE ON UPDATE CASCADE
+)engine=innodb;
+
+create table participan (
+fechaCarrera date,
+idCarrera int,
+nif varchar(9),
+posicionPiloto int not null,
+primary key (fechaCarrera, idCarrera, nif),
+FOREIGN KEY (idCarrera) REFERENCES carrera(idCarrera) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (nif) REFERENCES piloto(nif) ON DELETE CASCADE ON UPDATE CASCADE
+)engine=innodb;
+
+
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Talavera la Real", "España", 11, 4.5, 120000, "Circuito Extremadura Racing 71");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Nogaro", "Francia", 15, 3.6, 80000, "Circuito Paul Armagnac");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Varano", "Italia", 14, 2.3, 45000, "Autodromo Riccardo Paletti");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Lausitzalle", "Alemania", 14, 4.35, 77000, "Circuito de Lausitzring");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Spielberg", "Austria", 10, 3.6, 98000, "Red Bull Ring");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Zandvoort", "Holanda", 11, 3.6, 54000, "Circuito de Zandvoort");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Doha", "Catar", 14, 5.40, 110000, "Circuito Internacional de Losail");
+
+INSERT INTO circuito(localizacion, pais, curvasTotales, longitud, aforoAficionados, nombre)
+VALUES ("Iztacalco", "México", 13, 3.8, 50000, "Autodromo Hermanos Rodríguez");
+
+
+INSERT INTO categoria (nombreCategoria) 
+VALUES ("500CC");
+
+INSERT INTO categoria (nombreCategoria) 
+VALUES ("1000CC");
+
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (1, 75);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (3, 60);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (6, 55);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (4, 40);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (8, 38);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (5, 47);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (7, 59);
+
+INSERT INTO carrera (idCircuito, precioEntrada)
+VALUES (2, 63);
+
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (1, "Stefan Binder", 2725000.0, "Petronas Sprinta Racing","Petronas");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (1, "Daniel Pedrosa", 3140000.0, "GasGas MuchoNeumatico","Michelin");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (1, "Celestino Rossi", 3380000.0, "Red Bull KTM","Red Bull");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (1, "Nuno Oliveira", 2600000.0, "Leopard Racing","Pirelli");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (2, "Antonio Ruíz", 7000000.0, "Honda Repsol","Repsol");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (2, "Emmanuel Vietti", 5500000.0, "Aprilia Racing Team","ScProject");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (2, "Akiko Yoshiko", 5725000.0, "Suzuki Ecstar Team","Ecstar");
+
+INSERT INTO escuderia (idCategoria, nombreJefe, presupuesto, nombre, patrocinadorPrincipal)
+VALUES (2, "Valentino Pirro", 6800000.0, "Ducati Lenovo Team","Lenovo");
+
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("63090241A", 1, "Dennis Foggia", '2000-05-01', "Italia", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("86751533B", 1, "José Antonio Rueda", '2001-03-10', "España", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("84097667C", 2, "John McPhee", '2002-02-19', "Reino Unido", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("25151093D", 2, "David Salvador", '2001-07-20', "España", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("60795580E", 3, "Takuma Matsuyama", '2002-11-28', "Japón", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("51158022F", 3, "Lorenzo Fellon", '2000-09-05', "Francia", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("35400810G", 4, "David Alonso", '2003-06-08', "Colombia", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("69469014H", 4, "Kaito Toba", '2001-12-11', "Japón", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("97830014J", 5, "Gabriel Rodrigo", '1997-01-03', "Argentina", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("14497604K", 5, "Tony Arbolino", '1998-04-12', "Italia", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("79978359L", 6, "Marcel Schrotter", '2000-06-22', "Alemania", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("77244072M", 6, "Aron Canet", '1995-08-25', "España", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("36335574O", 7, "Ai Ogura", '1996-11-01', "Japón", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("21612540P", 7, "Filip Salac", '1996-01-14', "República Checa", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("90248347Q", 8, "Simone Corsi", '1999-01-24', "Italia", 0);
+
+INSERT INTO piloto (nif, idEscuderia, nombre, fNacimiento, nacionalidad, pilotoReserva)
+VALUES ("92231483R", 8, "Pedro Acosta", '1999-09-12', "España", 0);
+
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (1, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (2, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (3, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (4, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (5, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (6, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (7, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (8, 1);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (1, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (2, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (3, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (4, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (5, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (6, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (7, 2);
+
+INSERT INTO acogen (idCircuito, idCategoria)
+VALUES (8, 2);
+
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"86751533B", 5);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"63090241A", 3);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"25151093D", 6);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"84097667C", 8);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"51158022F", 4);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"60795580E", 7);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"69469014H", 1);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',1 ,"35400810G", 2);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"14497604K", 4);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"97830014J", 7);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"77244072M", 1);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"79978359L", 2);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"36335574O", 5);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"21612540P", 3);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"90248347Q", 6);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-01-15',2 ,"92231483R", 8);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"86751533B", 8);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"63090241A", 5);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"25151093D", 7);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"84097667C", 6);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"51158022F", 1);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"60795580E", 2);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"69469014H", 4);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',3 ,"35400810G", 3);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"14497604K", 2);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"97830014J", 5);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"77244072M", 3);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"79978359L", 1);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"36335574O", 6);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"21612540P", 4);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"90248347Q", 7);
+
+INSERT INTO participan (fechaCarrera, idCarrera, nif, posicionPiloto)
+VALUES ('2022-03-20',4 ,"92231483R", 8);
+
+
+
+
